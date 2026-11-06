@@ -124,14 +124,4 @@ python inference.py
 | :---: | :---: |
 | <img src="assets/test_sample1.jpg" alt="Test Sample 1" width="100%" /> | <img src="assets/test_sample2.jpg" alt="Test Sample 2" width="100%" /> |
 
----
 
-## 📝 上台演示快速指令 (Live Demo)
-
-```powershell
-# 1. 檢查 GPU 環境
-python -c "import torch; print('GPU:', torch.cuda.get_device_name(0))"
-
-# 2. 現場執行測試集推論與視覺化輸出 (約 3~5 秒)
-python inference.py
-```
