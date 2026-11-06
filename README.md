@@ -8,6 +8,7 @@
 
 ```text
 global-wheat-yolo/
+├── assets/                         # README 說明文件展示圖表與預測範例
 ├── data/
 │   ├── raw/                        # Kaggle 原始資料集 (train/, test/, train.csv)
 │   └── yolo_dataset/               # 轉換後的 YOLO 標準格式資料集
@@ -56,10 +57,15 @@ pip install ultralytics pandas scikit-learn tqdm opencv-python kaggle
 Kaggle 原始 `train.csv` 提供的標註格式為左上角像素絕對座標 `[xmin, ymin, width, height]`，而 YOLO 訓練要求每張圖片對應一個 `.txt` 標註檔，且數值必須為歸一化（0 ~ 1 之間）的中心點座標與寬高比例。
 
 轉換公式如下：
-* $x_{center} = \frac{x_{min} + \text{width} / 2}{\text{image\_width}}$
-* $y_{center} = \frac{y_{min} + \text{height} / 2}{\text{image\_height}}$
-* $w_{norm} = \frac{\text{width}}{\text{image\_width}}$
-* $h_{norm} = \frac{\text{height}}{\text{image\_height}}$
+
+```math
+\begin{aligned}
+x_{\text{center}} &= \frac{x_{\min} + \text{width} / 2}{\text{image\_width}} \\
+y_{\text{center}} &= \frac{y_{\min} + \text{height} / 2}{\text{image\_height}} \\
+w_{\text{norm}} &= \frac{\text{width}}{\text{image\_width}} \\
+h_{\text{norm}} &= \frac{\text{height}}{\text{image\_height}}
+\end{aligned}
+```
 
 執行轉換腳本（自動完成格式轉換與 80% 訓練集 / 20% 驗證集切分）：
 
@@ -93,19 +99,30 @@ python inference.py
 ### 1. 訓練收斂曲線 (`results.png`)
 包含訓練集與驗證集之 `box_loss`、`cls_loss`、`dfl_loss` 下降趨勢，以及 `Precision`、`Recall`、`mAP@50`、`mAP@50-95` 隨 Epoch 提升之收斂情形：
 
-![Training Results](runs/wheat/yolov8s_run1/results.png)
+<p align="center">
+  <img src="assets/results.png" alt="Training Results" width="90%" />
+</p>
 
 ### 2. Precision-Recall 曲線 (`BoxPR_curve.png`)
 模型於驗證集上之整體準確率與召回率表現：
 
-![PR Curve](runs/wheat/yolov8s_run1/BoxPR_curve.png)
+<p align="center">
+  <img src="assets/BoxPR_curve.png" alt="PR Curve" width="65%" />
+</p>
 
 ### 3. 驗證集真實標註 vs 模型預測對比
 左側為人工真實標註（Ground Truth），右側為模型預測結果（Predictions）：
 
-| 真實標註 (`val_batch0_labels.jpg`) | 模型預測 (`val_batch0_pred.jpg`) |
+| 真實標註 (Ground Truth) | 模型預測 (Predictions) |
 | :---: | :---: |
-| ![Labels](runs/wheat/yolov8s_run1/val_batch0_labels.jpg) | ![Predictions](runs/wheat/yolov8s_run1/val_batch0_pred.jpg) |
+| <img src="assets/val_batch0_labels.jpg" alt="Ground Truth" width="100%" /> | <img src="assets/val_batch0_pred.jpg" alt="Predictions" width="100%" /> |
+
+### 4. 測試集推論成果範例 (Test Predictions)
+模型對 Kaggle 未標記測試集影像的推論與麥穗偵測成果（信心度閾值 `conf = 0.4`）：
+
+| 測試集推論範例 1 (`2fd875eaa`) | 測試集推論範例 2 (`348a992bb`) |
+| :---: | :---: |
+| <img src="assets/test_sample1.jpg" alt="Test Sample 1" width="100%" /> | <img src="assets/test_sample2.jpg" alt="Test Sample 2" width="100%" /> |
 
 ---
 
