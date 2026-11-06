@@ -1,0 +1,8 @@
+# wheat.yaml
+# 使用絕對路徑或相對於當前執行目錄的相對路徑
+path: ./data/yolo_dataset
+train: images/train
+val: images/val
+
+names:
+  0: wheat
